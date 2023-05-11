@@ -7,15 +7,11 @@ services:
     user: node
     working_dir: /home/node
     env_file: .env
-    ports:
-      - 9003:9000
     volumes:
       - .:/home/node
     command: /bin/sh -c "npm i && npm run start:dev"
-    labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.exams.rule=PathPrefix(`/exams`)"
     networks:
+      - default
       - bng
 
   db:
@@ -29,10 +25,14 @@ services:
       POSTGRES_DB: db
     volumes:
       - bng-exams-db-data:/var/lib/postgresql/data:rw
+    networks:
+      - default
 
 volumes:
   bng-exams-db-data: {}
  
 networks:
+  default:
+    driver: bridge
   bng:
     external: true
