@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  api:
+  exams-api-service:
     image: adxl/bng-api-exams:latest
     build:
       context: .
       target: production
 
-  db:
+  exams-db-service:
     image: adxl/bng-db-exams:latest
     build:
       context: .
