@@ -6,9 +6,3 @@ services:
     build:
       context: .
       target: production
-
-  exams-db-service:
-    image: adxl/bng-db-exams:latest
-    build:
-      context: .
-      dockerfile: Dockerfile.db
