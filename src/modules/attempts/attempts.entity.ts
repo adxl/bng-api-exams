@@ -11,10 +11,10 @@ export class Attempts {
   @Max(100)
   score: number;
 
-  @Column({ type: 'datetime', default: () => 'NOW' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   endedAt: Date;
 
   @ManyToOne(() => Exams, (exam) => exam.attempts)
