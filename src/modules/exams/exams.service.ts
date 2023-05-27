@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { CreateExamsDto, UpdateExamsDto } from './exams.dto';
+import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
+import { CreateExamDto, UpdateExamDto } from './exams.dto';
 import { Exams } from './exams.entity';
 
 @Injectable()
@@ -11,31 +12,33 @@ export class ExamsService {
     private readonly examsRepository: Repository<Exams>,
   ) {}
 
-  async findAll(): Promise<Exams[]> {
-    return await this.examsRepository.find();
+  findAll(): Promise<Exams[]> {
+    return this.examsRepository.find({
+      relations: ['questions', 'questions.answers'],
+    });
   }
 
   async findOne(id: string): Promise<Exams> {
-    const data = await this.examsRepository.findOne({ where: { id: id } });
+    const data = await this.examsRepository.findOneBy({ id });
 
     if (!data) {
-      throw new NotFoundException();
+      throw new RpcException(new NotFoundException());
     }
 
     return data;
   }
 
-  create(data: CreateExamsDto): Exams {
-    return this.examsRepository.create(data);
+  create(data: CreateExamDto): Promise<InsertResult> {
+    return this.examsRepository.insert(data);
   }
 
   async remove(id: string): Promise<DeleteResult> {
     await this.findOne(id);
-    return await this.examsRepository.delete(id);
+    return this.examsRepository.delete(id);
   }
 
-  async update(id: string, data: UpdateExamsDto): Promise<UpdateResult> {
+  async update(id: string, data: UpdateExamDto): Promise<UpdateResult> {
     await this.findOne(id);
-    return await this.examsRepository.update(id, data);
+    return this.examsRepository.update(id, data);
   }
 }

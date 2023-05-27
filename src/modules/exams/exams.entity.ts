@@ -10,9 +10,9 @@ export class Exams {
   @Column({ type: 'int', unsigned: true })
   duration: number;
 
-  @OneToMany(() => Questions, (question) => question.exam)
+  @OneToMany(() => Questions, (question) => question.exam, { cascade: true })
   questions: Questions[];
 
-  @OneToMany(() => Attempts, (attempt) => attempt.exam)
+  @OneToMany(() => Attempts, (attempt) => attempt.exam, { cascade: true })
   attempts: Attempts[];
 }
