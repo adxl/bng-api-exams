@@ -1,4 +1,4 @@
-import { Answers } from 'src/modules/answers/answers.entity';
+import { Answers } from 'src/domains/answers/answers.entity';
 import {
   Column,
   Entity,

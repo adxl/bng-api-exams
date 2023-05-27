@@ -14,12 +14,25 @@ export class ExamsService {
 
   findAll(): Promise<Exams[]> {
     return this.examsRepository.find({
-      relations: ['questions', 'questions.answers'],
+      relations: {
+        questions: {
+          answers: true,
+        },
+      },
     });
   }
 
   async findOne(id: string): Promise<Exams> {
-    const data = await this.examsRepository.findOneBy({ id });
+    const data = await this.examsRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        questions: {
+          answers: true,
+        },
+      },
+    });
 
     if (!data) {
       throw new RpcException(new NotFoundException());

@@ -3,9 +3,9 @@ import { EventPattern } from '@nestjs/microservices';
 import {
   CreateExamDto,
   UpdateExamDtoWrapper,
-} from 'src/modules/exams/exams.dto';
-import { Exams } from 'src/modules/exams/exams.entity';
-import { ExamsService } from 'src/modules/exams/exams.service';
+} from 'src/domains/exams/exams.dto';
+import { Exams } from 'src/domains/exams/exams.entity';
+import { ExamsService } from 'src/domains/exams/exams.service';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 
 @Controller('exams')

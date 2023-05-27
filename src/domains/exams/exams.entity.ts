@@ -1,5 +1,5 @@
-import { Attempts } from 'src/modules/attempts/attempts.entity';
-import { Questions } from 'src/modules/questions/questions.entity';
+import { Attempts } from 'src/domains/attempts/attempts.entity';
+import { Questions } from 'src/domains/questions/questions.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

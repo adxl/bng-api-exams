@@ -1,5 +1,5 @@
 import { Max } from 'class-validator';
-import { Exams } from 'src/modules/exams/exams.entity';
+import { Exams } from 'src/domains/exams/exams.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from 'src/app.service';
-import { AnswersModule } from 'src/modules/answers/answers.module';
-import { AttemptsModule } from 'src/modules/attempts/attempts.module';
-import { QuestionsModule } from 'src/modules/questions/questions.module';
+import { AnswersModule } from 'src/domains/answers/answers.module';
+import { AttemptsModule } from 'src/domains/attempts/attempts.module';
+import { QuestionsModule } from 'src/domains/questions/questions.module';
+import { QuestionsService } from 'src/domains/questions/questions.service';
 import { AppController } from './app.controller';
 import { TypeOrmConfig } from './config/typeorm.config';
-import { ExamsModule } from './modules/exams/exams.module';
+import { ExamsModule } from './domains/exams/exams.module';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { ExamsModule } from './modules/exams/exams.module';
   ],
 
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, QuestionsService],
 })
 export class AppModule {}
