@@ -13,10 +13,6 @@ export class UpdateQuestionDto {
   @IsOptional()
   @IsString()
   title?: string;
-
-  @IsOptional()
-  @IsUUID()
-  examId?: string;
 }
 
 export class UpdateQuestionDtoWrapper {

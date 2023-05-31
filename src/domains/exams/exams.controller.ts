@@ -27,14 +27,14 @@ export class ExamsController {
     return this.examsService.create(data);
   }
 
-  @EventPattern('remove')
-  remove(id: string): Promise<DeleteResult> {
-    return this.examsService.remove(id);
-  }
-
   @EventPattern('update')
   update(data: UpdateExamDtoWrapper): Promise<UpdateResult> {
     const { id, body } = data;
     return this.examsService.update(id, body);
+  }
+
+  @EventPattern('remove')
+  remove(id: string): Promise<DeleteResult> {
+    return this.examsService.remove(id);
   }
 }

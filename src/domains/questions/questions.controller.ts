@@ -22,14 +22,14 @@ export class QuestionsController {
     return this.questionsService.create(data);
   }
 
-  @EventPattern('remove')
-  remove(id: string): Promise<DeleteResult> {
-    return this.questionsService.remove(id);
-  }
-
   @EventPattern('update')
   update(data: UpdateQuestionDtoWrapper): Promise<UpdateResult> {
     const { id, body } = data;
     return this.questionsService.update(id, body);
+  }
+
+  @EventPattern('remove')
+  remove(id: string): Promise<DeleteResult> {
+    return this.questionsService.remove(id);
   }
 }
