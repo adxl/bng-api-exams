@@ -3,11 +3,6 @@ import { Answer } from 'src/domains/answers/answers.entity';
 import { Attempt } from 'src/domains/attempts/attempts.entity';
 import { Exam } from 'src/domains/exams/exams.entity';
 import { Question } from 'src/domains/questions/questions.entity';
-// get variable from .env file
-require('dotenv').config();
-
-console.log('HEEEEEEEEEE');
-console.log(process.env.DATABASE_URL);
 
 const IS_LOCAL: boolean = process.env.STAGE === 'local';
 
