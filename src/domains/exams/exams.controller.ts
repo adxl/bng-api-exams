@@ -4,7 +4,7 @@ import {
   CreateExamDto,
   UpdateExamDtoWrapper,
 } from 'src/domains/exams/exams.dto';
-import { Exams } from 'src/domains/exams/exams.entity';
+import { Exam } from 'src/domains/exams/exams.entity';
 import { ExamsService } from 'src/domains/exams/exams.service';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 
@@ -13,12 +13,12 @@ export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
   @EventPattern('findAll')
-  findAll(): Promise<Exams[]> {
+  findAll(): Promise<Exam[]> {
     return this.examsService.findAll();
   }
 
   @EventPattern('findOne')
-  async findOne(id: string): Promise<Exams> {
+  async findOne(id: string): Promise<Exam> {
     return await this.examsService.findOne(id);
   }
 

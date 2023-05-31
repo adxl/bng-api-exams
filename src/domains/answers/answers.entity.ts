@@ -1,8 +1,9 @@
-import { Questions } from 'src/domains/questions/questions.entity';
+import { Exclude } from 'class-transformer';
+import { Question } from 'src/domains/questions/questions.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Answers {
+export class Answer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -10,8 +11,9 @@ export class Answers {
   title: string;
 
   @Column()
+  @Exclude() //TODO: add interceptor to exclude this field
   isCorrect: boolean;
 
-  @ManyToOne(() => Questions, (question) => question.answers)
-  question: Questions[];
+  @ManyToOne(() => Question, (question) => question.answers)
+  question: Question;
 }

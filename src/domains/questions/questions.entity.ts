@@ -1,4 +1,4 @@
-import { Answers } from 'src/domains/answers/answers.entity';
+import { Answer } from 'src/domains/answers/answers.entity';
 import {
   Column,
   Entity,
@@ -6,18 +6,18 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Exams } from '../exams/exams.entity';
+import { Exam } from '../exams/exams.entity';
 @Entity()
-export class Questions {
+export class Question {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('text')
   title: string;
 
-  @ManyToOne(() => Exams, (exam) => exam.questions)
-  exam: Exams[];
+  @ManyToOne(() => Exam, (exam) => exam.questions)
+  exam: Exam[];
 
-  @OneToMany(() => Answers, (answer) => answer.question)
-  answers: Answers[];
+  @OneToMany(() => Answer, (answer) => answer.question, { cascade: true })
+  answers: Answer[];
 }

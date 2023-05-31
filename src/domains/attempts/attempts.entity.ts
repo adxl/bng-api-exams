@@ -1,13 +1,13 @@
 import { Max } from 'class-validator';
-import { Exams } from 'src/domains/exams/exams.entity';
+import { Exam } from 'src/domains/exams/exams.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Attempts {
+export class Attempt {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'int', unsigned: true })
+  @Column({ type: 'int', unsigned: true, default: 0 })
   @Max(100)
   score: number;
 
@@ -15,10 +15,10 @@ export class Attempts {
   createdAt: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  endedAt: Date;
+  endedAt: Date | null;
 
-  @ManyToOne(() => Exams, (exam) => exam.attempts)
-  exam: Exams[];
+  @ManyToOne(() => Exam, (exam) => exam.attempts)
+  exam: Exam;
 
   @Column('uuid')
   userId: string;

@@ -3,18 +3,26 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
 
 export class CreateExamDto {
   @IsPositive()
   duration: number;
+
+  @IsUUID()
+  typeId: string;
 }
 
 export class UpdateExamDto {
   @IsPositive()
   @IsOptional()
   duration?: number;
+
+  @IsUUID()
+  @IsOptional()
+  typeId?: string;
 }
 
 export class UpdateExamDtoWrapper {

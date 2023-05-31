@@ -3,16 +3,16 @@ import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 import { CreateExamDto, UpdateExamDto } from './exams.dto';
-import { Exams } from './exams.entity';
+import { Exam } from './exams.entity';
 
 @Injectable()
 export class ExamsService {
   constructor(
-    @InjectRepository(Exams)
-    private readonly examsRepository: Repository<Exams>,
+    @InjectRepository(Exam)
+    private readonly examsRepository: Repository<Exam>,
   ) {}
 
-  findAll(): Promise<Exams[]> {
+  findAll(): Promise<Exam[]> {
     return this.examsRepository.find({
       relations: {
         questions: {
@@ -22,7 +22,7 @@ export class ExamsService {
     });
   }
 
-  async findOne(id: string): Promise<Exams> {
+  async findOne(id: string): Promise<Exam> {
     const data = await this.examsRepository.findOne({
       where: {
         id,

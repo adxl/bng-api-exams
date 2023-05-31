@@ -4,7 +4,6 @@ import { AppService } from 'src/app.service';
 import { AnswersModule } from 'src/domains/answers/answers.module';
 import { AttemptsModule } from 'src/domains/attempts/attempts.module';
 import { QuestionsModule } from 'src/domains/questions/questions.module';
-import { QuestionsService } from 'src/domains/questions/questions.service';
 import { AppController } from './app.controller';
 import { TypeOrmConfig } from './config/typeorm.config';
 import { ExamsModule } from './domains/exams/exams.module';
@@ -19,6 +18,6 @@ import { ExamsModule } from './domains/exams/exams.module';
   ],
 
   controllers: [AppController],
-  providers: [AppService, QuestionsService],
+  providers: [AppService],
 })
 export class AppModule {}
