@@ -10,7 +10,7 @@ export class Question {
   title: string;
 
   @ManyToOne(() => Exam, (exam) => exam.questions)
-  exam: Exam[];
+  exam: Exam;
 
   @OneToMany(() => Answer, (answer) => answer.question, { cascade: true })
   answers: Answer[];

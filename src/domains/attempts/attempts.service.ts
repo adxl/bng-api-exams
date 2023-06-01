@@ -52,9 +52,9 @@ export class AttemptsService {
   }
 
   async update(id: string, data: UpdateAttemptDto): Promise<UpdateResult> {
-    const { exam } = await this.findOne(id);
+    const { exam, endedAt } = await this.findOne(id);
 
-    // TODO: exams/feature/4
+    if (endedAt) throw new RpcException(new ConflictException('attempt already ended'));
 
     const score = exam.questions.filter((question) =>
       question.answers.find((answer) => {

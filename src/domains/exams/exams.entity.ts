@@ -10,7 +10,7 @@ export class Exam {
   @Column({ type: 'int', unsigned: true })
   duration: number;
 
-  @Column('uuid')
+  @Column({ unique: true, type: 'uuid' })
   typeId: string;
 
   @OneToMany(() => Question, (question) => question.exam, { cascade: true })

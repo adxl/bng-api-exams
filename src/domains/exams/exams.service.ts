@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
@@ -41,7 +41,22 @@ export class ExamsService {
     return data;
   }
 
-  create(data: CreateExamDto): Promise<InsertResult> {
+  async findOneByType(id: string): Promise<Exam> {
+    return await this.examsRepository.findOne({
+      where: {
+        typeId: id,
+      },
+      relations: {
+        questions: {
+          answers: true,
+        },
+      },
+    });
+  }
+
+  async create(data: CreateExamDto): Promise<InsertResult> {
+    if (await this.findOneByType(data.typeId))
+      throw new RpcException(new ConflictException('exam already exists for this type'));
     return this.examsRepository.insert(data);
   }
 
