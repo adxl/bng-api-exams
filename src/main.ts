@@ -16,14 +16,9 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log'] as LogLevel[],
   });
 
-  if (process.env.STAGE === 'production') {
-    Sentry.init({ dsn: process.env.SENTRY_DSN });
-    app.useGlobalFilters(
-      new SentryFilter(app.get(HttpAdapterHost).httpAdapter),
-    );
-  }
-
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalFilters(new SentryFilter(app.get(HttpAdapterHost).httpAdapter));
 
   await app.listen();
 }
