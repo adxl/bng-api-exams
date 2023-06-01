@@ -45,13 +45,13 @@ export class ExamsService {
     return this.examsRepository.insert(data);
   }
 
-  async remove(id: string): Promise<DeleteResult> {
-    await this.findOne(id);
-    return this.examsRepository.delete(id);
-  }
-
   async update(id: string, data: UpdateExamDto): Promise<UpdateResult> {
     await this.findOne(id);
     return this.examsRepository.update(id, data);
+  }
+
+  async remove(id: string): Promise<DeleteResult> {
+    await this.findOne(id);
+    return this.examsRepository.delete(id);
   }
 }

@@ -30,15 +30,12 @@ export class AnswersService {
     return this.answersRepository.insert(data);
   }
 
-  async remove(id: string): Promise<DeleteResult> {
-    return this.answersRepository.delete(id);
+  async update(id: string, data: UpdateAnswerDto): Promise<UpdateResult> {
+    await this.findOne(id);
+    return this.answersRepository.update(id, data);
   }
 
-  async update(id: string, data: UpdateAnswerDto): Promise<UpdateResult> {
-    // verify if questionId and Question exists
-    await this.findOne(id);
-    if (data.questionId) await this.questionService.findOne(data.questionId);
-
-    return this.answersRepository.update(id, data);
+  async remove(id: string): Promise<DeleteResult> {
+    return this.answersRepository.delete(id);
   }
 }

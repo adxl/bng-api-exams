@@ -26,10 +26,6 @@ export class UpdateAnswerDto {
   @IsBoolean()
   @IsOptional()
   isCorrect?: boolean;
-
-  @IsOptional()
-  @IsUUID()
-  questionId?: string;
 }
 
 export class UpdateAnswerDtoWrapper {

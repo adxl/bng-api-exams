@@ -30,6 +30,7 @@ export class QuestionsService {
     if (!data) {
       throw new RpcException(new NotFoundException());
     }
+
     return data;
   }
 
@@ -38,16 +39,13 @@ export class QuestionsService {
     return this.questionsRepository.insert(data);
   }
 
+  async update(id: string, data: UpdateQuestionDto): Promise<UpdateResult> {
+    await this.findOne(id);
+    return this.questionsRepository.update(id, data);
+  }
+
   async remove(id: string): Promise<DeleteResult> {
     await this.findOne(id);
     return this.questionsRepository.delete(id);
-  }
-
-  async update(id: string, data: UpdateQuestionDto): Promise<UpdateResult> {
-    // verify if examId and Question exists
-    await this.findOne(id);
-    if (data.examId) await this.examsService.findOne(data.examId);
-
-    return this.questionsRepository.update(id, data);
   }
 }
