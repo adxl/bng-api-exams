@@ -1,24 +1,30 @@
-import { Catch, HttpException, Logger } from '@nestjs/common';
+import { Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { RpcException } from '@nestjs/microservices';
 import * as Sentry from '@sentry/node';
 
-@Catch()
-export class SentryFilter extends BaseExceptionFilter {
-  private readonly logger = new Logger(SentryFilter.name);
+@Catch(RpcException)
+export class SentryRpcFilter implements ExceptionFilter {
+  private readonly logger = new Logger(SentryRpcFilter.name);
 
-  catch(exception: unknown) {
+  catch(exception: RpcException) {
     if (process.env.STAGE === 'production') {
       Sentry.captureException(exception);
     }
 
-    if (exception instanceof RpcException) {
-      this.logger.error(exception.getError().toString());
+    this.logger.error(exception.getError().toString());
+  }
+}
+
+@Catch(HttpException)
+export class SentryHttpFilter extends BaseExceptionFilter {
+  private readonly logger = new Logger(SentryHttpFilter.name);
+
+  catch(exception: HttpException) {
+    if (process.env.STAGE === 'production') {
+      Sentry.captureException(exception);
     }
 
-    if (exception instanceof HttpException) {
-      this.logger.error(exception.getResponse());
-      throw new HttpException(exception.getResponse(), exception.getStatus());
-    }
+    this.logger.error(exception.getResponse());
   }
 }

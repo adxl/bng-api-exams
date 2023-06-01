@@ -1,10 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  CreateAnswerDto,
-  UpdateAnswerDto,
-} from 'src/domains/answers/answers.dto';
+import { CreateAnswerDto, UpdateAnswerDto } from 'src/domains/answers/answers.dto';
 import { Answer } from 'src/domains/answers/answers.entity';
 import { QuestionsService } from 'src/domains/questions/questions.service';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';

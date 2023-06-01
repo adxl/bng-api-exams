@@ -1,11 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsOptional,
-  IsPositive,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from 'class-validator';
+import { IsOptional, IsPositive, IsString, IsUUID, ValidateNested } from 'class-validator';
 
 export class CreateExamDto {
   @IsPositive()

@@ -9,13 +9,7 @@ import { TypeOrmConfig } from './config/typeorm.config';
 import { ExamsModule } from './domains/exams/exams.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(TypeOrmConfig),
-    ExamsModule,
-    QuestionsModule,
-    AnswersModule,
-    AttemptsModule,
-  ],
+  imports: [TypeOrmModule.forRoot(TypeOrmConfig), ExamsModule, QuestionsModule, AnswersModule, AttemptsModule],
 
   controllers: [AppController],
   providers: [AppService],

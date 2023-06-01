@@ -8,12 +8,7 @@ import { AttemptsController } from './attempts.controller';
 import { AttemptsService } from './attempts.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Attempt]),
-    AnswersModule,
-    QuestionsModule,
-    ExamsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Attempt]), AnswersModule, QuestionsModule, ExamsModule],
   providers: [AttemptsService],
   controllers: [AttemptsController],
 })

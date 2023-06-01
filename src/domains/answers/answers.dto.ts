@@ -1,11 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from 'class-validator';
+import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
 export class CreateAnswerDto {
   @IsString()
