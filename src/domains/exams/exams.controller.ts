@@ -1,39 +1,35 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
-import {
-  CreateExamDto,
-  UpdateExamDtoWrapper,
-} from 'src/domains/exams/exams.dto';
-import { Exam } from 'src/domains/exams/exams.entity';
-import { ExamsService } from 'src/domains/exams/exams.service';
+import { CreateExamDto, UpdateExamDtoWrapper } from './exams.dto';
+import { Exam } from './exams.entity';
+import { ExamsService } from './exams.service';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 
-@Controller('exams')
+@Controller()
 export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
-  @EventPattern('findAll')
+  @EventPattern('exams.findAll')
   findAll(): Promise<Exam[]> {
     return this.examsService.findAll();
   }
 
-  @EventPattern('findOne')
-  async findOne(id: string): Promise<Exam> {
-    return await this.examsService.findOne(id);
+  @EventPattern('exams.findOne')
+  findOne(id: string): Promise<Exam> {
+    return this.examsService.findOne(id);
   }
 
-  @EventPattern('create')
+  @EventPattern('exams.create')
   create(data: CreateExamDto): Promise<InsertResult> {
     return this.examsService.create(data);
   }
 
-  @EventPattern('update')
+  @EventPattern('exams.update')
   update(data: UpdateExamDtoWrapper): Promise<UpdateResult> {
-    const { id, body } = data;
-    return this.examsService.update(id, body);
+    return this.examsService.update(data.id, data.body);
   }
 
-  @EventPattern('remove')
+  @EventPattern('exams.remove')
   remove(id: string): Promise<DeleteResult> {
     return this.examsService.remove(id);
   }

@@ -43,9 +43,11 @@ export class AttemptsService {
 
   async findOne(id: string): Promise<Attempt> {
     const data = await this.attemptsRepository.findOneBy({ id });
+
     if (!data) {
       throw new RpcException(new NotFoundException("can't find attempt"));
     }
+
     return data;
   }
 
@@ -55,13 +57,16 @@ export class AttemptsService {
     if (await this.findActiveByType(exam.typeId)) {
       throw new RpcException(new ConflictException('attempt already exists'));
     }
-    //TODO: get user api-auth
+
+    //TODO: bng/feature/6
 
     return this.attemptsRepository.insert(data);
   }
 
   async update(id: string, data: UpdateAttemptDto): Promise<UpdateResult> {
     const { exam } = await this.findOne(id);
+
+    // TODO: exams/feature/4
 
     const score = exam.questions.filter((question) =>
       question.answers.find((answer) => {
