@@ -1,6 +1,6 @@
-import { Attempt } from 'src/domains/attempts/attempts.entity';
-import { Question } from 'src/domains/questions/questions.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Attempt } from '../attempts/attempts.entity';
+import { Question } from '../questions/questions.entity';
 
 @Entity()
 export class Exam {

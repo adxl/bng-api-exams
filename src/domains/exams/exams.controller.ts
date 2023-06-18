@@ -1,9 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, UseInterceptors } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { CreateExamDto, UpdateExamDtoWrapper } from './exams.dto';
 import { Exam } from './exams.entity';
 import { ExamsService } from './exams.service';
-import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 
 @Controller()
 export class ExamsController {
@@ -15,6 +15,7 @@ export class ExamsController {
   }
 
   @EventPattern('exams.findOne')
+  @UseInterceptors(ClassSerializerInterceptor)
   findOne(id: string): Promise<Exam> {
     return this.examsService.findOne(id);
   }

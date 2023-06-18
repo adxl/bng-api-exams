@@ -1,22 +1,16 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { SeederOptions } from 'typeorm-extension';
 import { Answer } from '../domains/answers/answers.entity';
 import { Attempt } from '../domains/attempts/attempts.entity';
 import { Exam } from '../domains/exams/exams.entity';
 import { Question } from '../domains/questions/questions.entity';
+import { MainSeeder } from './seeds/main.seeder';
 
-const IS_LOCAL: boolean = process.env.STAGE === 'local';
-
-export const TypeOrmConfig: TypeOrmModuleOptions = {
+const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
   entities: [Exam, Question, Attempt, Answer],
-  synchronize: IS_LOCAL,
-  ssl: !IS_LOCAL,
-  extra: IS_LOCAL
-    ? {}
-    : {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
+  seeds: [MainSeeder],
 };
+
+export const AppDataSource = new DataSource(options);

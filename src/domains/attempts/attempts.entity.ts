@@ -1,6 +1,6 @@
 import { Max } from 'class-validator';
-import { Exam } from 'src/domains/exams/exams.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Exam } from '../exams/exams.entity';
 
 @Entity()
 export class Attempt {

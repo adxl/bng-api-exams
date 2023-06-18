@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Question } from 'src/domains/questions/questions.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Question } from '../questions/questions.entity';
 
 @Entity()
 export class Answer {
@@ -11,7 +11,7 @@ export class Answer {
   title: string;
 
   @Column()
-  @Exclude() //TODO: add interceptor to exclude this field
+  @Exclude()
   isCorrect: boolean;
 
   @ManyToOne(() => Question, (question) => question.answers)

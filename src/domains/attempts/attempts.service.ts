@@ -1,8 +1,8 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ExamsService } from 'src/domains/exams/exams.service';
 import { InsertResult, IsNull, MoreThanOrEqual, Not, Repository, UpdateResult } from 'typeorm';
+import { ExamsService } from '../exams/exams.service';
 import { CreateAttemptDto, UpdateAttemptDto } from './attempts.dto';
 import { Attempt } from './attempts.entity';
 

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ExamsController } from 'src/domains/exams/exams.controller';
+import { ExamsController } from '../exams/exams.controller';
 import { Exam } from './exams.entity';
 import { ExamsService } from './exams.service';
 @Module({
