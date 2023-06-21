@@ -21,6 +21,7 @@ export class QuestionsService {
       },
       relations: {
         answers: true,
+        exam: true,
       },
     });
 
@@ -32,7 +33,7 @@ export class QuestionsService {
   }
 
   async create(data: CreateQuestionDto): Promise<InsertResult> {
-    await this.examsService.findOne(data.examId);
+    await this.examsService.findOne(data.exam.id);
     return this.questionsRepository.insert(data);
   }
 

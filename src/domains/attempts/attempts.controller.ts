@@ -10,8 +10,8 @@ export class AttemptsController {
   constructor(private readonly attemptsService: AttemptsService) {}
 
   @EventPattern('attempts.findActiveByType')
-  findActiveByType(typeId: string): Promise<Attempt> {
-    return this.attemptsService.findActiveByType(typeId);
+  findActiveByType(userId: string, typeId: string): Promise<Attempt> {
+    return this.attemptsService.findActiveByType(userId, typeId);
   }
 
   @EventPattern('attempts.findOne')

@@ -9,7 +9,7 @@ export class Question {
   @Column('text')
   title: string;
 
-  @ManyToOne(() => Exam, (exam) => exam.questions)
+  @ManyToOne(() => Exam, (exam) => exam.questions, { onDelete: 'CASCADE' })
   exam: Exam;
 
   @OneToMany(() => Answer, (answer) => answer.question, { cascade: true })

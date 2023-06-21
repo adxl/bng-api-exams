@@ -14,9 +14,10 @@ export class AttemptsService {
     @Inject(ExamsService) private readonly examsService: ExamsService,
   ) {}
 
-  findActiveByType(typeId: string): Promise<Attempt> {
+  findActiveByType(userId: string, typeId: string): Promise<Attempt> {
     return this.attemptsRepository.findOne({
       where: {
+        userId,
         exam: {
           typeId,
         },
@@ -30,19 +31,22 @@ export class AttemptsService {
   }
 
   async findOne(id: string): Promise<Attempt> {
-    const data = await this.attemptsRepository.findOneBy({ id });
+    const data = await this.attemptsRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (!data) {
       throw new RpcException(new NotFoundException("can't find attempt"));
     }
-
     return data;
   }
 
   async create(data: CreateAttemptDto): Promise<InsertResult> {
-    const exam = await this.examsService.findOne(data.examId);
+    const exam = await this.examsService.findOne(data.exam.id);
 
-    if (await this.findActiveByType(exam.typeId)) {
+    if (await this.findActiveByType(data.userId, exam.typeId)) {
       throw new RpcException(new ConflictException('attempt already exists'));
     }
 
@@ -52,7 +56,8 @@ export class AttemptsService {
   }
 
   async update(id: string, data: UpdateAttemptDto): Promise<UpdateResult> {
-    const { exam, endedAt } = await this.findOne(id);
+    const { examId, endedAt } = await this.findOne(id);
+    const exam = await this.examsService.findOne(examId);
 
     if (endedAt) throw new RpcException(new ConflictException('attempt already ended'));
 

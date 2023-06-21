@@ -1,5 +1,5 @@
 import { Max } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Exam } from '../exams/exams.entity';
 
 @Entity()
@@ -17,8 +17,11 @@ export class Attempt {
   @Column({ type: 'timestamp', nullable: true })
   endedAt: Date | null;
 
-  @ManyToOne(() => Exam, (exam) => exam.attempts)
+  @ManyToOne(() => Exam, (exam) => exam.attempts, { onDelete: 'CASCADE' })
   exam: Exam;
+
+  @RelationId((attempt: Attempt) => attempt.exam)
+  examId: string;
 
   @Column('uuid')
   userId: string;

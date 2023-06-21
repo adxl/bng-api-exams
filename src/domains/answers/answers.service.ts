@@ -23,7 +23,7 @@ export class AnswersService {
   }
 
   async create(data: CreateAnswerDto): Promise<InsertResult> {
-    await this.questionService.findOne(data.questionId);
+    await this.questionService.findOne(data.question.id);
     return this.answersRepository.insert(data);
   }
 

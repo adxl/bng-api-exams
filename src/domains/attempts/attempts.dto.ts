@@ -1,9 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsUUID, ValidateNested } from 'class-validator';
+import { IsNotEmptyObject, IsUUID, ValidateNested } from 'class-validator';
+import { EntityReference } from '../../types';
 
 export class CreateAttemptDto {
-  @IsUUID()
-  examId: string;
+  @ValidateNested()
+  @Type(() => EntityReference)
+  @IsNotEmptyObject()
+  exam: EntityReference;
 
   @IsUUID()
   userId: string;
