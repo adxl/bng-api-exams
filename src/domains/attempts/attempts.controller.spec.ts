@@ -19,6 +19,15 @@ describe('Tests for attempts of exams', () => {
     attemptsController = module.get(AttemptsController);
   });
 
+  describe('Test find the active attempt by type for an user', () => {
+    it('should return one attempt', async () => {
+      const userId = 'c63a4bd1-cabd-44ee-b911-9ee2533dd014';
+      const typeId = '33333333-bab3-439d-965d-0522568b0000';
+      const attempt = await attemptsController.findActiveByType(userId, typeId);
+      expect(attempt.score).toBeGreaterThan(80);
+    });
+  });
+
   describe('Test find one attempt', () => {
     it('should return one attempt', async () => {
       const attempt = await attemptsController.findOne('44444444-bab3-439d-965d-0522568b0003');
@@ -30,7 +39,7 @@ describe('Tests for attempts of exams', () => {
     it('should return an UUID', async () => {
       const data = {
         exam: { id: '11111111-bab3-439d-965d-0522568b0002' },
-        userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd014',
+        userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd017',
       };
       expect((await attemptsController.create(data)).identifiers[0].id).toHaveLength(36);
     });
