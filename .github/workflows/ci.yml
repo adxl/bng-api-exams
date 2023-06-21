@@ -20,14 +20,17 @@ jobs:
       - name: Install
         run: npm install
 
+      - name: Database
+        run: docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres:13-alpine 
+
       - name: Build
         run: npm run build
 
       - name: Seeder
-        run: npm run seed
+        run:  DATABASE_URL=postgres://postgres:password@localhost:5432/postgres npm run seed
 
       - name: Tests
-        run: npm run test:cov
+        run: STAGE=local DATABASE_URL=postgres://postgres:password@localhost:5432/postgres npm run test:cov
 
   publish:
     needs: build
