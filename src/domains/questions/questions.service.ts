@@ -21,7 +21,6 @@ export class QuestionsService {
       },
       relations: {
         answers: true,
-        exam: true,
       },
     });
 

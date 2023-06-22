@@ -25,6 +25,10 @@ describe('Tests for questions of exams', () => {
       const question = await questionsController.findOne('22222222-bab3-439d-965d-0522568b0000');
       expect(question.title).toEqual(questionTitle);
     });
+
+    it('should throws a not found exception', async () => {
+      await expect(questionsController.findOne('22222222-bab3-439d-965d-1522568b0000')).rejects.toThrow();
+    });
   });
 
   describe('Test create question', () => {
@@ -40,7 +44,7 @@ describe('Tests for questions of exams', () => {
   describe('Test update question', () => {
     it('should return the number of affected resources', async () => {
       const data = {
-        id: '22222222-bab3-439d-965d-0522568b0009',
+        id: '22222222-bab3-439d-965d-0522568b0001',
         body: {
           title: 'Question mise à jour',
         },

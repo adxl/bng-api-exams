@@ -23,7 +23,7 @@ describe('Tests for attempts of exams', () => {
     it('should return one attempt', async () => {
       const userId = 'c63a4bd1-cabd-44ee-b911-9ee2533dd014';
       const typeId = '33333333-bab3-439d-965d-0522568b0000';
-      const attempt = await attemptsController.findActiveByType(userId, typeId);
+      const attempt = await attemptsController.findActiveByType({ userId, typeId });
       expect(attempt.score).toBeGreaterThan(80);
     });
   });
@@ -32,6 +32,10 @@ describe('Tests for attempts of exams', () => {
     it('should return one attempt', async () => {
       const attempt = await attemptsController.findOne('44444444-bab3-439d-965d-0522568b0003');
       expect(attempt.score).toEqual(100);
+    });
+
+    it('should throws a not found exception', async () => {
+      await expect(attemptsController.findOne('44444444-bab3-439d-965d-1522568b0003')).rejects.toThrow();
     });
   });
 
@@ -42,6 +46,14 @@ describe('Tests for attempts of exams', () => {
         userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd017',
       };
       expect((await attemptsController.create(data)).identifiers[0].id).toHaveLength(36);
+    });
+
+    it('should throws a conflict exception', async () => {
+      const data = {
+        exam: { id: '11111111-bab3-439d-965d-0522568b0001' },
+        userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd014',
+      };
+      await expect(attemptsController.create(data)).rejects.toThrow();
     });
   });
 
@@ -74,6 +86,29 @@ describe('Tests for attempts of exams', () => {
         },
       };
       expect((await attemptsController.update(data)).affected).toEqual(1);
+    });
+
+    it('should throws a conflict exception', async () => {
+      const data = {
+        id: '44444444-bab3-439d-965d-0522568b0000',
+        body: {
+          userAnswers: [
+            {
+              questionId: '22222222-bab3-439d-965d-0522568b0000',
+              answerId: '33333333-bab3-439d-965d-0522568b0001',
+            },
+            {
+              questionId: '22222222-bab3-439d-965d-0522568b0001',
+              answerId: '33333333-bab3-439d-965d-0522568b0003',
+            },
+            {
+              questionId: '22222222-bab3-439d-965d-0522568b0002',
+              answerId: '33333333-bab3-439d-965d-0522568b0007',
+            },
+          ],
+        },
+      };
+      await expect(attemptsController.update(data)).rejects.toThrow();
     });
   });
 });

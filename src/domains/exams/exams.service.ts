@@ -46,11 +46,6 @@ export class ExamsService {
       where: {
         typeId: id,
       },
-      relations: {
-        questions: {
-          answers: true,
-        },
-      },
     });
   }
 

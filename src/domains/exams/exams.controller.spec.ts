@@ -32,6 +32,10 @@ describe('Tests for exams', () => {
       const exam = await examsController.findOne('11111111-bab3-439d-965d-0522568b0001');
       expect(exam.typeId).toEqual('33333333-bab3-439d-965d-0522568b0001');
     });
+
+    it('should throws a not found exception', async () => {
+      await expect(examsController.findOne('11111111-bab3-439d-965d-0522568bd001')).rejects.toThrow();
+    });
   });
 
   describe('Test create exam', () => {
@@ -41,6 +45,14 @@ describe('Tests for exams', () => {
         typeId: '33333333-bab3-439d-965d-0522568b0005',
       };
       expect((await examsController.create(data)).identifiers[0].id).toHaveLength(36);
+    });
+
+    it('should throws a conflict exception', async () => {
+      const data = {
+        duration: 3600,
+        typeId: '33333333-bab3-439d-965d-0522568b0005',
+      };
+      await expect(examsController.create(data)).rejects.toThrow();
     });
   });
 
@@ -58,7 +70,7 @@ describe('Tests for exams', () => {
 
   describe('Test remove one exam', () => {
     it('should return the number of affected resources', async () => {
-      const data = '11111111-bab3-439d-965d-0522568b0001';
+      const data = '11111111-bab3-439d-965d-0522568b0003';
       expect((await examsController.remove(data)).affected).toEqual(1);
     });
   });

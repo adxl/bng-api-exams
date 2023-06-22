@@ -3,7 +3,7 @@ import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InsertResult, IsNull, MoreThanOrEqual, Not, Repository, UpdateResult } from 'typeorm';
 import { ExamsService } from '../exams/exams.service';
-import { CreateAttemptDto, UpdateAttemptDto } from './attempts.dto';
+import { ActiveAttemptByTypeDto, CreateAttemptDto, UpdateAttemptDto } from './attempts.dto';
 import { Attempt } from './attempts.entity';
 
 @Injectable()
@@ -14,7 +14,8 @@ export class AttemptsService {
     @Inject(ExamsService) private readonly examsService: ExamsService,
   ) {}
 
-  findActiveByType(userId: string, typeId: string): Promise<Attempt> {
+  findActiveByType(data: ActiveAttemptByTypeDto): Promise<Attempt> {
+    const { userId, typeId } = data;
     return this.attemptsRepository.findOne({
       where: {
         userId,
@@ -45,8 +46,9 @@ export class AttemptsService {
 
   async create(data: CreateAttemptDto): Promise<InsertResult> {
     const exam = await this.examsService.findOne(data.exam.id);
-
-    if (await this.findActiveByType(data.userId, exam.typeId)) {
+    const userId = data.userId;
+    const typeId = exam.typeId;
+    if (await this.findActiveByType({ userId, typeId })) {
       throw new RpcException(new ConflictException('attempt already exists'));
     }
 
@@ -63,12 +65,14 @@ export class AttemptsService {
 
     const score = exam.questions.filter((question) =>
       question.answers.find((answer) => {
-        answer.isCorrect &&
-          data.userAnswers.find((userAnswer) => userAnswer.questionId === question.id).answerId === answer.id;
+        return (
+          answer.isCorrect &&
+          data.userAnswers.find((userAnswer) => userAnswer.questionId === question.id).answerId === answer.id
+        );
       }),
     );
 
-    const result = Math.floor(score.length / exam.questions.length) * 100;
+    const result = Math.floor((score.length / exam.questions.length) * 100);
 
     return this.attemptsRepository.update(id, {
       score: result,

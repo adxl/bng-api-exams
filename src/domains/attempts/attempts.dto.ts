@@ -33,3 +33,11 @@ export class UpdateAttemptDtoWrapper {
   @Type(() => UpdateAttemptDto)
   body: UpdateAttemptDto;
 }
+
+export class ActiveAttemptByTypeDto {
+  @IsUUID()
+  userId: string;
+
+  @IsUUID()
+  typeId: string;
+}

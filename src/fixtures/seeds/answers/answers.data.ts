@@ -183,13 +183,13 @@ const answersCapsulePneumatique = [
   {
     id: '33333333-bab3-439d-965d-0522568b0026',
     title: 'Vérifier la disponibilité des sièges massants',
-    isCorrect: true,
+    isCorrect: false,
     question: { id: '22222222-bab3-439d-965d-0522568b0008' },
   },
   {
     id: '33333333-bab3-439d-965d-0522568b0027',
     title: "Vérifier le système d'évacuation d'urgence en cas d'incident",
-    isCorrect: true,
+    isCorrect: false,
     question: { id: '22222222-bab3-439d-965d-0522568b0008' },
   },
 ];

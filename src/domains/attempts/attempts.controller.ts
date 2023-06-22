@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { InsertResult, UpdateResult } from 'typeorm';
-import { CreateAttemptDto, UpdateAttemptDtoWrapper } from './attempts.dto';
+import { ActiveAttemptByTypeDto, CreateAttemptDto, UpdateAttemptDtoWrapper } from './attempts.dto';
 import { Attempt } from './attempts.entity';
 import { AttemptsService } from './attempts.service';
 
@@ -10,8 +10,8 @@ export class AttemptsController {
   constructor(private readonly attemptsService: AttemptsService) {}
 
   @EventPattern('attempts.findActiveByType')
-  findActiveByType(userId: string, typeId: string): Promise<Attempt> {
-    return this.attemptsService.findActiveByType(userId, typeId);
+  findActiveByType(data: ActiveAttemptByTypeDto): Promise<Attempt> {
+    return this.attemptsService.findActiveByType(data);
   }
 
   @EventPattern('attempts.findOne')

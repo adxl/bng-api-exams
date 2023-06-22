@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { CreateAnswerDto, UpdateAnswerDtoWrapper } from './answers.dto';
 import { Answer } from './answers.entity';
 import { AnswersService } from './answers.service';
-import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 
 @Controller()
 export class AnswersController {
