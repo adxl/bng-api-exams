@@ -27,6 +27,10 @@ export async function bootstrap() {
   app.useGlobalFilters(new SentryHttpFilter());
 
   await app.listen();
+
+  return app;
 }
 
-bootstrap();
+if (process.env.STAGE !== 'test') {
+  bootstrap();
+}

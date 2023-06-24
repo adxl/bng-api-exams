@@ -1,3 +1,4 @@
+import { INestMicroservice } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -12,8 +13,9 @@ import { bootstrap } from './main';
 
 describe('Tests entrypoint', () => {
   let appController: AppController;
+  let appInstance: INestMicroservice;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot(TypeOrmConfig),
@@ -24,16 +26,22 @@ describe('Tests entrypoint', () => {
     }).compile();
 
     appController = module.get(AppController);
+    appInstance = await bootstrap();
+  });
+
+  afterAll((done) => {
+    appInstance.close();
+    done();
   });
 
   describe('Start the server', () => {
     it('it should start the server', () => {
-      expect(bootstrap).toBeDefined();
+      expect(appInstance).toBeDefined();
     });
   });
 
   describe('Test call index', () => {
-    it('should return an welcome string', () => {
+    it('should return a welcome string', () => {
       expect(appController.getIndex()).toEqual('Welcome to Exams API');
     });
   });
