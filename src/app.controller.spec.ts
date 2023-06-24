@@ -42,7 +42,7 @@ describe('Tests entrypoint', () => {
 
   describe('Test call index', () => {
     it('should return a welcome string', () => {
-      expect(appController.getIndex()).toEqual('Welcome to Exams API');
+      expect(appController.index()).toEqual('Welcome to Exams API');
     });
   });
 
