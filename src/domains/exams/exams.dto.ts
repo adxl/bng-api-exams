@@ -13,10 +13,6 @@ export class UpdateExamDto {
   @IsPositive()
   @IsOptional()
   duration?: number;
-
-  @IsUUID()
-  @IsOptional()
-  typeId?: string;
 }
 
 export class UpdateExamDtoWrapper {

@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNotEmptyObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { EntityReference } from '../../types';
 
 export class CreateAnswerDto {
   @IsString()
@@ -8,8 +9,10 @@ export class CreateAnswerDto {
   @IsBoolean()
   isCorrect: boolean;
 
-  @IsUUID()
-  questionId: string;
+  @ValidateNested()
+  @Type(() => EntityReference)
+  @IsNotEmptyObject()
+  question: EntityReference;
 }
 
 export class UpdateAnswerDto {

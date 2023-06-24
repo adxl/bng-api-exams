@@ -7,11 +7,11 @@ import * as Sentry from '@sentry/node';
 import { SentryHttpFilter, SentryRpcFilter } from './filters/sentry.filter';
 import { CustomValidationPipe } from './pipes/validation.pipe';
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, {
     transport: Transport.TCP,
     options: {
-      host: '0.0.0.0',
+      host: process.env.HOST || '0.0.0.0',
       port: Number(process.env.PORT) || 9000,
     },
     logger: ['error', 'warn', 'debug', 'log'] as LogLevel[],
@@ -27,6 +27,10 @@ async function bootstrap() {
   app.useGlobalFilters(new SentryHttpFilter());
 
   await app.listen();
+
+  return app;
 }
 
-bootstrap();
+if (process.env.STAGE !== 'test') {
+  bootstrap();
+}

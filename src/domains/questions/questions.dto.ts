@@ -1,12 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsNotEmptyObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { EntityReference } from '../../types';
 
 export class CreateQuestionDto {
   @IsString()
   title: string;
 
-  @IsUUID()
-  examId: string;
+  @ValidateNested()
+  @Type(() => EntityReference)
+  @IsNotEmptyObject()
+  exam: EntityReference;
 }
 
 export class UpdateQuestionDto {
