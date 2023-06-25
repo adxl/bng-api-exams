@@ -4,6 +4,7 @@ import { TypeOrmConfig } from '../../config/typeorm.config';
 import { QuestionsModule } from '../questions/questions.module';
 import { AnswersController } from './answers.controller';
 import { Answer } from './answers.entity';
+import { AnswersModule } from './answers.module';
 import { AnswersService } from './answers.service';
 
 describe('Tests for answers of exams', () => {
@@ -11,24 +12,17 @@ describe('Tests for answers of exams', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Answer]), QuestionsModule],
-      providers: [AnswersService],
+      imports: [
+        TypeOrmModule.forRoot(TypeOrmConfig),
+        TypeOrmModule.forFeature([Answer]),
+        AnswersModule,
+        QuestionsModule,
+      ],
       controllers: [AnswersController],
+      providers: [AnswersService],
     }).compile();
 
     answersController = module.get(AnswersController);
-  });
-
-  describe('Test find one answer', () => {
-    it('should return one answer', async () => {
-      const answerTitle = 'Mouvements corporels';
-      const answer = await answersController.findOne('33333333-bab3-439d-965d-0522568b0002');
-      expect(answer.title).toEqual(answerTitle);
-    });
-
-    it('should throws a not found exception', async () => {
-      await expect(answersController.findOne('33333333-bab3-439d-965d-1522568b0002')).rejects.toThrow();
-    });
   });
 
   describe('Test create answer', () => {

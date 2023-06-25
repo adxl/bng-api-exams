@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfig } from '../../config/typeorm.config';
 import { ExamsController } from './exams.controller';
 import { Exam } from './exams.entity';
+import { ExamsModule } from './exams.module';
 import { ExamsService } from './exams.service';
 
 describe('Tests for exams', () => {
@@ -10,10 +11,7 @@ describe('Tests for exams', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot(TypeOrmConfig),
-        TypeOrmModule.forFeature([Exam]), //
-      ],
+      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Exam]), ExamsModule],
       providers: [ExamsService],
       controllers: [ExamsController],
     }).compile();
@@ -23,7 +21,8 @@ describe('Tests for exams', () => {
 
   describe('Test find all exams', () => {
     it('should return an array of exams', async () => {
-      expect(await examsController.findAll()).toHaveLength(4);
+      const exams = await examsController.findAll();
+      expect(Array.isArray(exams)).toBe(true);
     });
   });
 

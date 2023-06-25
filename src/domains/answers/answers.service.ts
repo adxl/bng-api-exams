@@ -14,6 +14,7 @@ export class AnswersService {
     @Inject(QuestionsService)
     private readonly questionService: QuestionsService,
   ) {}
+
   async findOne(id: string): Promise<Answer> {
     const data = await this.answersRepository.findOneBy({ id });
     if (!data) {

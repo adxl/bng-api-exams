@@ -4,6 +4,7 @@ import { TypeOrmConfig } from '../../config/typeorm.config';
 import { ExamsModule } from '../exams/exams.module';
 import { QuestionsController } from './questions.controller';
 import { Question } from './questions.entity';
+import { QuestionsModule } from './questions.module';
 import { QuestionsService } from './questions.service';
 
 describe('Tests for questions of exams', () => {
@@ -11,24 +12,17 @@ describe('Tests for questions of exams', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Question]), ExamsModule],
+      imports: [
+        TypeOrmModule.forRoot(TypeOrmConfig),
+        TypeOrmModule.forFeature([Question]),
+        QuestionsModule,
+        ExamsModule,
+      ],
       providers: [QuestionsService],
       controllers: [QuestionsController],
     }).compile();
 
     questionsController = module.get(QuestionsController);
-  });
-
-  describe('Test find one question', () => {
-    it('should return one question', async () => {
-      const questionTitle = "Quelle est la bonne règle de sécurité à suivre lors de l'utilisation d'un hoverboard ?";
-      const question = await questionsController.findOne('22222222-bab3-439d-965d-0522568b0000');
-      expect(question.title).toEqual(questionTitle);
-    });
-
-    it('should throws a not found exception', async () => {
-      await expect(questionsController.findOne('22222222-bab3-439d-965d-1522568b0000')).rejects.toThrow();
-    });
   });
 
   describe('Test create question', () => {

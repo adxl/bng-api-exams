@@ -6,10 +6,13 @@ import { ExamsModule } from '../exams/exams.module';
 import { QuestionsModule } from '../questions/questions.module';
 import { AttemptsController } from './attempts.controller';
 import { AttemptsService } from './attempts.service';
+import { AuthGuard } from '../../auth.guard';
+import { AUTH_SERVICE } from '../../constants';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Attempt]), AnswersModule, QuestionsModule, ExamsModule],
-  providers: [AttemptsService],
   controllers: [AttemptsController],
+  providers: [AttemptsService, AuthGuard, AUTH_SERVICE],
+  exports: [AttemptsService, AuthGuard, AUTH_SERVICE],
 })
 export class AttemptsModule {}

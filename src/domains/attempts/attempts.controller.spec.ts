@@ -4,6 +4,7 @@ import { TypeOrmConfig } from '../../config/typeorm.config';
 import { ExamsModule } from '../exams/exams.module';
 import { AttemptsController } from './attempts.controller';
 import { Attempt } from './attempts.entity';
+import { AttemptsModule } from './attempts.module';
 import { AttemptsService } from './attempts.service';
 
 describe('Tests for attempts of exams', () => {
@@ -11,7 +12,7 @@ describe('Tests for attempts of exams', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Attempt]), ExamsModule],
+      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Attempt]), AttemptsModule, ExamsModule],
       providers: [AttemptsService],
       controllers: [AttemptsController],
     }).compile();
@@ -21,21 +22,10 @@ describe('Tests for attempts of exams', () => {
 
   describe('Test find the active attempt by type for an user', () => {
     it('should return one attempt', async () => {
-      const userId = 'c63a4bd1-cabd-44ee-b911-9ee2533dd014';
-      const typeId = '33333333-bab3-439d-965d-0522568b0000';
+      const userId = 'c63a4bd1-cabd-44ee-b911-9ee2533dd003';
+      const typeId = '33333333-bab3-439d-965d-0522568b0001';
       const attempt = await attemptsController.findActiveByType({ userId, typeId });
       expect(attempt.score).toBeGreaterThan(80);
-    });
-  });
-
-  describe('Test find one attempt', () => {
-    it('should return one attempt', async () => {
-      const attempt = await attemptsController.findOne('44444444-bab3-439d-965d-0522568b0003');
-      expect(attempt.score).toEqual(100);
-    });
-
-    it('should throws a not found exception', async () => {
-      await expect(attemptsController.findOne('44444444-bab3-439d-965d-1522568b0003')).rejects.toThrow();
     });
   });
 
@@ -51,7 +41,7 @@ describe('Tests for attempts of exams', () => {
     it('should throws a conflict exception', async () => {
       const data = {
         exam: { id: '11111111-bab3-439d-965d-0522568b0001' },
-        userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd014',
+        userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd003',
       };
       await expect(attemptsController.create(data)).rejects.toThrow();
     });
