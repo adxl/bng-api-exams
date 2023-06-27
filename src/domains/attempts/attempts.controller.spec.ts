@@ -6,13 +6,20 @@ import { AttemptsController } from './attempts.controller';
 import { Attempt } from './attempts.entity';
 import { AttemptsModule } from './attempts.module';
 import { AttemptsService } from './attempts.service';
+import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests for attempts of exams', () => {
   let attemptsController: AttemptsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Attempt]), AttemptsModule, ExamsModule],
+      imports: [
+        ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
+        TypeOrmModule.forRoot(TypeOrmConfig),
+        TypeOrmModule.forFeature([Attempt]),
+        AttemptsModule,
+        ExamsModule,
+      ],
       providers: [AttemptsService],
       controllers: [AttemptsController],
     }).compile();
@@ -24,37 +31,37 @@ describe('Tests for attempts of exams', () => {
     it('should return one attempt', async () => {
       const userId = 'c63a4bd1-cabd-44ee-b911-9ee2533dd003';
       const typeId = '33333333-bab3-439d-965d-0522568b0001';
-      const attempt = await attemptsController.findActiveByType({ userId, typeId });
+      const attempt = await attemptsController.findActiveByType({ body: { userId, typeId } });
       expect(attempt.score).toBeGreaterThan(80);
     });
   });
 
   describe('Test create attempt', () => {
     it('should return an UUID', async () => {
-      const data = {
+      const body = {
         exam: { id: '11111111-bab3-439d-965d-0522568b0002' },
         userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd017',
       };
-      expect((await attemptsController.create(data)).identifiers[0].id).toHaveLength(36);
+      expect((await attemptsController.create({ body })).identifiers[0].id).toHaveLength(36);
     });
 
     it('should throws a conflict exception', async () => {
-      const data = {
+      const body = {
         exam: { id: '11111111-bab3-439d-965d-0522568b0001' },
         userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd003',
       };
-      await expect(attemptsController.create(data)).rejects.toThrow();
+      await expect(attemptsController.create({ body })).rejects.toThrow();
     });
   });
 
   describe('Test update attempt - create & update', () => {
     it('should return the number of affected resources', async () => {
-      const newAttempt = {
+      const body = {
         exam: { id: '11111111-bab3-439d-965d-0522568b0000' },
         userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd024',
       };
 
-      const attempt = await attemptsController.create(newAttempt);
+      const attempt = await attemptsController.create({ body });
 
       const data = {
         id: attempt.identifiers[0].id,

@@ -5,13 +5,19 @@ import { ExamsController } from './exams.controller';
 import { Exam } from './exams.entity';
 import { ExamsModule } from './exams.module';
 import { ExamsService } from './exams.service';
+import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests for exams', () => {
   let examsController: ExamsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(TypeOrmConfig), TypeOrmModule.forFeature([Exam]), ExamsModule],
+      imports: [
+        ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
+        TypeOrmModule.forRoot(TypeOrmConfig),
+        TypeOrmModule.forFeature([Exam]),
+        ExamsModule,
+      ],
       providers: [ExamsService],
       controllers: [ExamsController],
     }).compile();
@@ -28,30 +34,30 @@ describe('Tests for exams', () => {
 
   describe('Test find one exam', () => {
     it('should return one exam', async () => {
-      const exam = await examsController.findOne('11111111-bab3-439d-965d-0522568b0001');
+      const exam = await examsController.findOne({ id: '11111111-bab3-439d-965d-0522568b0001' });
       expect(exam.typeId).toEqual('33333333-bab3-439d-965d-0522568b0001');
     });
 
     it('should throws a not found exception', async () => {
-      await expect(examsController.findOne('11111111-bab3-439d-965d-0522568bd001')).rejects.toThrow();
+      await expect(examsController.findOne({ id: '11111111-bab3-439d-965d-0522568bd001' })).rejects.toThrow();
     });
   });
 
   describe('Test create exam', () => {
     it('should return an UUID', async () => {
-      const data = {
+      const body = {
         duration: 3600,
         typeId: '33333333-bab3-439d-965d-0522568b0005',
       };
-      expect((await examsController.create(data)).identifiers[0].id).toHaveLength(36);
+      expect((await examsController.create({ body })).identifiers[0].id).toHaveLength(36);
     });
 
     it('should throws a conflict exception', async () => {
-      const data = {
+      const body = {
         duration: 3600,
         typeId: '33333333-bab3-439d-965d-0522568b0005',
       };
-      await expect(examsController.create(data)).rejects.toThrow();
+      await expect(examsController.create({ body })).rejects.toThrow();
     });
   });
 
@@ -69,8 +75,8 @@ describe('Tests for exams', () => {
 
   describe('Test remove one exam', () => {
     it('should return the number of affected resources', async () => {
-      const data = '11111111-bab3-439d-965d-0522568b0003';
-      expect((await examsController.remove(data)).affected).toEqual(1);
+      const id = '11111111-bab3-439d-965d-0522568b0003';
+      expect((await examsController.remove({ id })).affected).toEqual(1);
     });
   });
 });

@@ -5,7 +5,7 @@ import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { QuestionsService } from './questions.service';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
-import { RequestPayload } from 'src/types';
+import { RequestPayload } from '../../types';
 
 @Controller()
 export class QuestionsController {

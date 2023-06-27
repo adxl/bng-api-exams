@@ -6,7 +6,7 @@ import { Exam } from './exams.entity';
 import { ExamsService } from './exams.service';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
-import { RequestPayload } from 'src/types';
+import { RequestPayload } from '../../types';
 
 @Controller()
 export class ExamsController {

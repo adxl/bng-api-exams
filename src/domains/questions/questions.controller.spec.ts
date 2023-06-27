@@ -6,6 +6,7 @@ import { QuestionsController } from './questions.controller';
 import { Question } from './questions.entity';
 import { QuestionsModule } from './questions.module';
 import { QuestionsService } from './questions.service';
+import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests for questions of exams', () => {
   let questionsController: QuestionsController;
@@ -13,6 +14,7 @@ describe('Tests for questions of exams', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
         TypeOrmModule.forRoot(TypeOrmConfig),
         TypeOrmModule.forFeature([Question]),
         QuestionsModule,
@@ -27,11 +29,11 @@ describe('Tests for questions of exams', () => {
 
   describe('Test create question', () => {
     it('should return an UUID', async () => {
-      const data = {
+      const body = {
         title: 'Une capsule peut-elle être dirigé sans pilote ?',
         exam: { id: '11111111-bab3-439d-965d-0522568b0002' },
       };
-      expect((await questionsController.create(data)).identifiers[0].id).toHaveLength(36);
+      expect((await questionsController.create({ body })).identifiers[0].id).toHaveLength(36);
     });
   });
 
@@ -49,8 +51,8 @@ describe('Tests for questions of exams', () => {
 
   describe('Test remove one question', () => {
     it('should return the number of affected resources', async () => {
-      const data = '22222222-bab3-439d-965d-0522568b0007';
-      expect((await questionsController.remove(data)).affected).toEqual(1);
+      const id = '22222222-bab3-439d-965d-0522568b0007';
+      expect((await questionsController.remove({ id })).affected).toEqual(1);
     });
   });
 });
