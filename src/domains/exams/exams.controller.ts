@@ -1,11 +1,12 @@
 import { ClassSerializerInterceptor, Controller, UseGuards, UseInterceptors } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
+import { EventPattern, Payload } from '@nestjs/microservices';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
-import { CreateExamDto, UpdateExamDtoWrapper } from './exams.dto';
+import { CreateExamPayload, UpdateExamPayload } from './exams.dto';
 import { Exam } from './exams.entity';
 import { ExamsService } from './exams.service';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
+import { RequestPayload } from 'src/types';
 
 @Controller()
 export class ExamsController {
@@ -20,25 +21,25 @@ export class ExamsController {
   @EventPattern('exams.findOne')
   @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.USER]), AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  findOne(id: string): Promise<Exam> {
-    return this.examsService.findOne(id);
+  findOne(@Payload() payload: RequestPayload): Promise<Exam> {
+    return this.examsService.findOne(payload.id);
   }
 
   @EventPattern('exams.create')
   @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
-  create(data: CreateExamDto): Promise<InsertResult> {
-    return this.examsService.create(data);
+  create(@Payload() payload: CreateExamPayload): Promise<InsertResult> {
+    return this.examsService.create(payload.body);
   }
 
   @EventPattern('exams.update')
   @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
-  update(data: UpdateExamDtoWrapper): Promise<UpdateResult> {
-    return this.examsService.update(data.id, data.body);
+  update(@Payload() payload: UpdateExamPayload): Promise<UpdateResult> {
+    return this.examsService.update(payload.id, payload.body);
   }
 
   @EventPattern('exams.remove')
   @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
-  remove(id: string): Promise<DeleteResult> {
-    return this.examsService.remove(id);
+  remove(@Payload() payload: RequestPayload): Promise<DeleteResult> {
+    return this.examsService.remove(payload.id);
   }
 }

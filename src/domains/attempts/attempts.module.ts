@@ -6,13 +6,18 @@ import { ExamsModule } from '../exams/exams.module';
 import { QuestionsModule } from '../questions/questions.module';
 import { AttemptsController } from './attempts.controller';
 import { AttemptsService } from './attempts.service';
-import { AuthGuard } from '../../auth.guard';
-import { AUTH_SERVICE } from '../../constants';
+import { ClientProxy } from '../../config/proxy.config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Attempt]), AnswersModule, QuestionsModule, ExamsModule],
+  imports: [
+    ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
+    TypeOrmModule.forFeature([Attempt]),
+    AnswersModule,
+    QuestionsModule,
+    ExamsModule,
+  ],
   controllers: [AttemptsController],
-  providers: [AttemptsService, AuthGuard, AUTH_SERVICE],
-  exports: [AttemptsService, AuthGuard, AUTH_SERVICE],
+  providers: [AttemptsService],
+  exports: [AttemptsService],
 })
 export class AttemptsModule {}

@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsNotEmptyObject, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { EntityReference } from '../../types';
+import { EntityReference, RequestPayload } from '../../types';
 
 export class CreateAnswerDto {
   @IsString()
@@ -15,6 +15,13 @@ export class CreateAnswerDto {
   question: EntityReference;
 }
 
+export class CreateAnswerPayload extends RequestPayload {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateAnswerDto)
+  body: CreateAnswerDto;
+}
+
 export class UpdateAnswerDto {
   @IsOptional()
   @IsString()
@@ -25,10 +32,8 @@ export class UpdateAnswerDto {
   isCorrect?: boolean;
 }
 
-export class UpdateAnswerDtoWrapper {
-  @IsString()
-  id: string;
-
+export class UpdateAnswerPayload extends RequestPayload {
+  @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => UpdateAnswerDto)
   body: UpdateAnswerDto;

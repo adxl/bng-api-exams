@@ -1,7 +1,7 @@
 import { Controller, UseGuards } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
+import { EventPattern, Payload } from '@nestjs/microservices';
 import { InsertResult, UpdateResult } from 'typeorm';
-import { ActiveAttemptByTypeDto, CreateAttemptDto, UpdateAttemptDtoWrapper } from './attempts.dto';
+import { ActiveAttemptPayload, CreateAttemptPayload, UpdateAttemptPayload } from './attempts.dto';
 import { Attempt } from './attempts.entity';
 import { AttemptsService } from './attempts.service';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
@@ -13,19 +13,19 @@ export class AttemptsController {
 
   @EventPattern('attempts.findActiveByType')
   @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
-  findActiveByType(data: ActiveAttemptByTypeDto): Promise<Attempt> {
-    return this.attemptsService.findActiveByType(data);
+  findActiveByType(@Payload() payload: ActiveAttemptPayload): Promise<Attempt> {
+    return this.attemptsService.findActiveByType(payload.body);
   }
 
   @EventPattern('attempts.create')
   @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
-  create(data: CreateAttemptDto): Promise<InsertResult> {
-    return this.attemptsService.create(data);
+  create(@Payload() payload: CreateAttemptPayload): Promise<InsertResult> {
+    return this.attemptsService.create(payload.body);
   }
 
   @EventPattern('attempts.update')
   @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
-  update(data: UpdateAttemptDtoWrapper): Promise<UpdateResult> {
-    return this.attemptsService.update(data.id, data.body);
+  update(@Payload() payload: UpdateAttemptPayload): Promise<UpdateResult> {
+    return this.attemptsService.update(payload.id, payload.body);
   }
 }

@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsPositive, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsNotEmptyObject, IsOptional, IsPositive, IsUUID, ValidateNested } from 'class-validator';
+import { RequestPayload } from 'src/types';
 
 export class CreateExamDto {
   @IsPositive()
@@ -9,16 +10,23 @@ export class CreateExamDto {
   typeId: string;
 }
 
+export class CreateExamPayload extends RequestPayload {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateExamDto)
+  body: CreateExamDto;
+}
+
+// ---
+
 export class UpdateExamDto {
   @IsPositive()
   @IsOptional()
   duration?: number;
 }
 
-export class UpdateExamDtoWrapper {
-  @IsString()
-  id: string;
-
+export class UpdateExamPayload extends RequestPayload {
+  @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => UpdateExamDto)
   body: UpdateExamDto;

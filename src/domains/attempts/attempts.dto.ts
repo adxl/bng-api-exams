@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsNotEmptyObject, IsUUID, ValidateNested } from 'class-validator';
-import { EntityReference } from '../../types';
+import { EntityReference, RequestPayload } from '../../types';
 
 export class CreateAttemptDto {
   @ValidateNested()
@@ -12,27 +12,37 @@ export class CreateAttemptDto {
   userId: string;
 }
 
-export class UpdateAttemptDto {
-  @ValidateNested({ each: true })
-  @Type(() => UserAnswer) // validate type of each element in array
-  userAnswers?: UserAnswer[];
+export class CreateAttemptPayload extends RequestPayload {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateAttemptDto)
+  body: CreateAttemptDto;
 }
+
+//---
 
 class UserAnswer {
   @IsUUID()
   questionId: string;
+
   @IsUUID()
   answerId: string;
 }
 
-export class UpdateAttemptDtoWrapper {
-  @IsUUID()
-  id: string;
+export class UpdateAttemptDto {
+  @ValidateNested({ each: true })
+  @Type(() => UserAnswer)
+  userAnswers?: UserAnswer[];
+}
 
+export class UpdateAttemptPayload extends RequestPayload {
+  @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => UpdateAttemptDto)
   body: UpdateAttemptDto;
 }
+
+// ---
 
 export class ActiveAttemptByTypeDto {
   @IsUUID()
@@ -40,4 +50,11 @@ export class ActiveAttemptByTypeDto {
 
   @IsUUID()
   typeId: string;
+}
+
+export class ActiveAttemptPayload extends RequestPayload {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => ActiveAttemptByTypeDto)
+  body: ActiveAttemptByTypeDto;
 }
