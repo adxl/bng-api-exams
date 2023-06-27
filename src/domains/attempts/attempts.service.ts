@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, IsNull, MoreThanOrEqual, Not, Repository, UpdateResult } from 'typeorm';
+import { InsertResult, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { ExamsService } from '../exams/exams.service';
 import { ActiveAttemptByTypeDto, CreateAttemptDto, UpdateAttemptDto } from './attempts.dto';
 import { Attempt } from './attempts.entity';
@@ -52,12 +52,24 @@ export class AttemptsService {
       throw new RpcException(new ConflictException('attempt already exists'));
     }
 
+    this.attemptsRepository.remove(
+      await this.attemptsRepository.find({
+        where: {
+          userId,
+          exam: {
+            typeId,
+          },
+          endedAt: IsNull(),
+        },
+      }),
+    );
+
     //TODO: bng/feature/6
 
     return this.attemptsRepository.insert(data);
   }
 
-  async update(id: string, data: UpdateAttemptDto): Promise<UpdateResult> {
+  async update(id: string, data: UpdateAttemptDto): Promise<Attempt> {
     const { examId, endedAt } = await this.findOne(id);
     const exam = await this.examsService.findOne(examId);
 
@@ -74,9 +86,11 @@ export class AttemptsService {
 
     const result = Math.floor((score.length / exam.questions.length) * 100);
 
-    return this.attemptsRepository.update(id, {
+    await this.attemptsRepository.update(id, {
       score: result,
       endedAt: new Date(),
     });
+
+    return this.findOne(id);
   }
 }

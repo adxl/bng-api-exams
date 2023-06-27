@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientProxy } from '../../config/proxy.config';
 import { TypeOrmConfig } from '../../config/typeorm.config';
 import { ExamsModule } from '../exams/exams.module';
 import { AttemptsController } from './attempts.controller';
 import { Attempt } from './attempts.entity';
 import { AttemptsModule } from './attempts.module';
 import { AttemptsService } from './attempts.service';
-import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests for attempts of exams', () => {
   let attemptsController: AttemptsController;
@@ -62,9 +62,10 @@ describe('Tests for attempts of exams', () => {
       };
 
       const attempt = await attemptsController.create({ body });
+      const attemptId = attempt.identifiers[0].id;
 
       const data = {
-        id: attempt.identifiers[0].id,
+        id: attemptId,
         body: {
           userAnswers: [
             {
@@ -82,7 +83,7 @@ describe('Tests for attempts of exams', () => {
           ],
         },
       };
-      expect((await attemptsController.update(data)).affected).toEqual(1);
+      expect((await attemptsController.update(data)).id).toEqual(attemptId);
     });
 
     it('should throws a conflict exception', async () => {

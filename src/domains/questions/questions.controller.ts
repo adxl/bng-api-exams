@@ -1,15 +1,22 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { CreateQuestionPayload, UpdateQuestionPayload } from './questions.dto';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
-import { QuestionsService } from './questions.service';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
-import { UserRole } from '../../types/user-role';
 import { RequestPayload } from '../../types';
+import { UserRole } from '../../types/user-role';
+import { CreateQuestionPayload, UpdateQuestionPayload } from './questions.dto';
+import { Question } from './questions.entity';
+import { QuestionsService } from './questions.service';
 
 @Controller()
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
+
+  @EventPattern('questions.findOne')
+  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
+  findOne(@Payload() payload: RequestPayload): Promise<Question> {
+    return this.questionsService.findOne(payload.id);
+  }
 
   @EventPattern('questions.create')
   @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)

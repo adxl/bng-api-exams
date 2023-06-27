@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientProxy } from '../../config/proxy.config';
 import { TypeOrmConfig } from '../../config/typeorm.config';
 import { ExamsController } from './exams.controller';
 import { Exam } from './exams.entity';
 import { ExamsModule } from './exams.module';
 import { ExamsService } from './exams.service';
-import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests for exams', () => {
   let examsController: ExamsController;
@@ -26,8 +26,16 @@ describe('Tests for exams', () => {
   });
 
   describe('Test find all exams', () => {
-    it('should return an array of exams', async () => {
+    it('should return an array of exams for an inspector', async () => {
       const exams = await examsController.findAll();
+      expect(Array.isArray(exams)).toBe(true);
+    });
+
+    it('should return an array of exams for an user', async () => {
+      const data = {
+        userId: '163a4bd1-cabd-44ee-b911-9ee2533dd000',
+      };
+      const exams = await examsController.findAllUser(data);
       expect(Array.isArray(exams)).toBe(true);
     });
   });
@@ -35,6 +43,11 @@ describe('Tests for exams', () => {
   describe('Test find one exam', () => {
     it('should return one exam', async () => {
       const exam = await examsController.findOne({ id: '11111111-bab3-439d-965d-0522568b0001' });
+      expect(exam.typeId).toEqual('33333333-bab3-439d-965d-0522568b0001');
+    });
+
+    it('should return one exam public', async () => {
+      const exam = await examsController.findOnePublic({ id: '11111111-bab3-439d-965d-0522568b0001' });
       expect(exam.typeId).toEqual('33333333-bab3-439d-965d-0522568b0001');
     });
 
