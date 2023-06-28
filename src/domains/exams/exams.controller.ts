@@ -1,27 +1,39 @@
 import { ClassSerializerInterceptor, Controller, UseGuards, UseInterceptors } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
+import { AuthGuard, RolesGuard } from '../../auth.guard';
+import { RequestPayload } from '../../types';
+import { UserRole } from '../../types/user-role';
 import { CreateExamPayload, UpdateExamPayload } from './exams.dto';
 import { Exam } from './exams.entity';
 import { ExamsService } from './exams.service';
-import { AuthGuard, RolesGuard } from '../../auth.guard';
-import { UserRole } from '../../types/user-role';
-import { RequestPayload } from '../../types';
 
 @Controller()
 export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
+  @EventPattern('exams.findAllUser')
+  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.USER]), AuthGuard)
+  findAllUser(@Payload() payload: RequestPayload): Promise<Exam[]> {
+    return this.examsService.findAll(UserRole.USER, payload.userId);
+  }
+
   @EventPattern('exams.findAll')
-  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
+  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.USER]), AuthGuard)
   findAll(): Promise<Exam[]> {
-    return this.examsService.findAll();
+    return this.examsService.findAll(UserRole.INSTRUCTOR, null);
   }
 
   @EventPattern('exams.findOne')
-  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.USER]), AuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
   findOne(@Payload() payload: RequestPayload): Promise<Exam> {
+    return this.examsService.findOne(payload.id);
+  }
+
+  @EventPattern('exams.findOnePublic')
+  @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  findOnePublic(@Payload() payload: RequestPayload): Promise<Exam> {
     return this.examsService.findOne(payload.id);
   }
 

@@ -1,11 +1,11 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
-import { AnswersService } from './answers.service';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
+import { RequestPayload } from '../../types';
 import { UserRole } from '../../types/user-role';
 import { CreateAnswerPayload, UpdateAnswerPayload } from './answers.dto';
-import { RequestPayload } from '../../types';
+import { AnswersService } from './answers.service';
 
 @Controller()
 export class AnswersController {

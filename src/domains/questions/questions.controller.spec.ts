@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientProxy } from '../../config/proxy.config';
 import { TypeOrmConfig } from '../../config/typeorm.config';
 import { ExamsModule } from '../exams/exams.module';
 import { QuestionsController } from './questions.controller';
 import { Question } from './questions.entity';
 import { QuestionsModule } from './questions.module';
 import { QuestionsService } from './questions.service';
-import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests for questions of exams', () => {
   let questionsController: QuestionsController;
@@ -25,6 +25,24 @@ describe('Tests for questions of exams', () => {
     }).compile();
 
     questionsController = module.get(QuestionsController);
+  });
+
+  describe('Test find one question', () => {
+    it('should return one question', async () => {
+      const questionTitle = "Quelle est la bonne règle de sécurité à suivre lors de l'utilisation d'un hoverboard ?";
+      const question = await questionsController.findOne({ id: '22222222-bab3-439d-965d-0522568b0000' });
+      expect(question.title).toEqual(questionTitle);
+    });
+  });
+
+  describe('Test create question', () => {
+    it('should return an UUID', async () => {
+      const body = {
+        title: 'Une capsule peut-elle être dirigé sans pilote ?',
+        exam: { id: '11111111-bab3-439d-965d-0522568b0002' },
+      };
+      expect((await questionsController.create({ body })).identifiers[0].id).toHaveLength(36);
+    });
   });
 
   describe('Test create question', () => {

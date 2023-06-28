@@ -1,7 +1,8 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, In, InsertResult, IsNull, MoreThanOrEqual, Not, Repository, UpdateResult } from 'typeorm';
+import { UserRole } from '../../types/user-role';
 import { CreateExamDto, UpdateExamDto } from './exams.dto';
 import { Exam } from './exams.entity';
 
@@ -12,7 +13,46 @@ export class ExamsService {
     private readonly examsRepository: Repository<Exam>,
   ) {}
 
-  findAll(): Promise<Exam[]> {
+  async findAll(role: UserRole, userId: string | null): Promise<Exam[]> {
+    if (role === UserRole.USER) {
+      const examsPassed = await this.examsRepository.find({
+        join: {
+          alias: 'exam',
+          leftJoin: {
+            attempts: 'exam.attempts',
+          },
+        },
+        where: [
+          {
+            attempts: {
+              userId,
+              endedAt: Not(IsNull()),
+              score: MoreThanOrEqual(80),
+            },
+          },
+          {
+            attempts: null,
+          },
+        ],
+        relations: {
+          questions: true,
+          attempts: true,
+        },
+      });
+
+      const examsIds = examsPassed.map((exam) => exam.id);
+
+      const examsNotPassed = await this.examsRepository.find({
+        where: {
+          id: Not(In(examsIds)),
+        },
+        relations: {
+          questions: true,
+        },
+      });
+
+      return [...examsPassed, ...examsNotPassed];
+    }
     return this.examsRepository.find({
       relations: {
         questions: {

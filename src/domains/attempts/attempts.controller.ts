@@ -1,11 +1,11 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { InsertResult, UpdateResult } from 'typeorm';
+import { InsertResult } from 'typeorm';
+import { AuthGuard, RolesGuard } from '../../auth.guard';
+import { UserRole } from '../../types/user-role';
 import { ActiveAttemptPayload, CreateAttemptPayload, UpdateAttemptPayload } from './attempts.dto';
 import { Attempt } from './attempts.entity';
 import { AttemptsService } from './attempts.service';
-import { AuthGuard, RolesGuard } from '../../auth.guard';
-import { UserRole } from '../../types/user-role';
 
 @Controller()
 export class AttemptsController {
@@ -25,7 +25,7 @@ export class AttemptsController {
 
   @EventPattern('attempts.update')
   @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
-  update(@Payload() payload: UpdateAttemptPayload): Promise<UpdateResult> {
+  update(@Payload() payload: UpdateAttemptPayload): Promise<Attempt> {
     return this.attemptsService.update(payload.id, payload.body);
   }
 }
