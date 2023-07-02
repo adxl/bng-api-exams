@@ -13,19 +13,19 @@ export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
   @EventPattern('exams.findAllUser')
-  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.USER]), AuthGuard)
+  @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
   findAllUser(@Payload() payload: RequestPayload): Promise<Exam[]> {
     return this.examsService.findAll(UserRole.USER, payload.userId);
   }
 
   @EventPattern('exams.findAll')
-  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.USER]), AuthGuard)
+  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.ADMINISTRATOR]), AuthGuard)
   findAll(): Promise<Exam[]> {
     return this.examsService.findAll(UserRole.INSTRUCTOR, null);
   }
 
   @EventPattern('exams.findOne')
-  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR]), AuthGuard)
+  @UseGuards(new RolesGuard([UserRole.INSTRUCTOR, UserRole.ADMINISTRATOR]), AuthGuard)
   findOne(@Payload() payload: RequestPayload): Promise<Exam> {
     return this.examsService.findOne(payload.id);
   }

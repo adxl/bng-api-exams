@@ -36,6 +36,13 @@ describe('Tests for attempts of exams', () => {
     });
   });
 
+  describe('Test find all ended attempts', () => {
+    it('should return an array of attempts', async () => {
+      const attempts = await attemptsController.findAllEnded();
+      expect(Array.isArray(attempts)).toBe(true);
+    });
+  });
+
   describe('Test create attempt', () => {
     it('should return an UUID', async () => {
       const body = {

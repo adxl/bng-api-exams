@@ -31,6 +31,20 @@ export class AttemptsService {
     });
   }
 
+  findAllEnded(): Promise<Attempt[]> {
+    return this.attemptsRepository.find({
+      relations: {
+        exam: true,
+      },
+      where: {
+        endedAt: Not(IsNull()),
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
   async findOne(id: string): Promise<Attempt> {
     const data = await this.attemptsRepository.findOne({
       where: {

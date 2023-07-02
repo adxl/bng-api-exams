@@ -17,6 +17,12 @@ export class AttemptsController {
     return this.attemptsService.findActiveByType(payload.body);
   }
 
+  @EventPattern('attempts.findAllEnded')
+  @UseGuards(new RolesGuard([UserRole.ADMINISTRATOR, UserRole.INSTRUCTOR]), AuthGuard)
+  findAllEnded(): Promise<Attempt[]> {
+    return this.attemptsService.findAllEnded();
+  }
+
   @EventPattern('attempts.create')
   @UseGuards(new RolesGuard([UserRole.USER]), AuthGuard)
   create(@Payload() payload: CreateAttemptPayload): Promise<InsertResult> {
